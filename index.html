@@ -6,21 +6,25 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <title>Choo choo cha boogie</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.8.0/firebase.js"></script>
 
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="./styles/cosmo.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="./styles/cosmo.css">
     <link rel="stylesheet" href="./styles/style.css">
 
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    
+    
 
   </head>
   <body>
     <header>
         <div class="jumbotron">
-            <h1>IHateToast Line: Notoastia Station</h1>
+            <h1>FART: Firebase Austin Rapid Transit</h1>
             <p>Upload and maintain new train schedule.</p>
           </div>
     </header>
@@ -41,20 +45,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>O'Jays: Love train</td>
-                        <td>Buscemiland</td>
-                        <td>55</td>
-                        <td>14:02</td>
-                        <td>00:02</td>
-                      </tr>
-                      <tr>
-                        <td>Le Chic choo choo</td>
-                        <td>Funkytown</td>
-                        <td>30</td>
-                        <td>16:40</td>
-                        <td>02:40</td>
-                      </tr>
+                      <!-- fill from firebase -->
                     </tbody>
                   </table> 
             </div>
@@ -67,72 +58,28 @@
               <div class="panel-body">
                   <form class="form-horizontal">
                       <fieldset>
-                        <legend>Legend</legend>
                         <div class="form-group">
-                          <label for="inputEmail" class="col-lg-2 control-label">Email</label>
+                          <label for="trainLine" class="col-lg-2 control-label">Train Line:</label>
                           <div class="col-lg-10">
-                            <input type="text" class="form-control" id="inputEmail" placeholder="Email">
+                            <input type="text" class="form-control" id="train" placeholder="train line">
                           </div>
                         </div>
                         <div class="form-group">
-                          <label for="inputPassword" class="col-lg-2 control-label">Password</label>
+                          <label for="destination" class="col-lg-2 control-label">Destination</label>
                           <div class="col-lg-10">
-                            <input type="password" class="form-control" id="inputPassword" placeholder="Password">
-                            <div class="checkbox">
-                              <label>
-                                <input type="checkbox"> Checkbox
-                              </label>
-                            </div>
+                            <input type="text" class="form-control" id="destination" placeholder="destination">
                           </div>
                         </div>
                         <div class="form-group">
-                          <label for="textArea" class="col-lg-2 control-label">Textarea</label>
+                          <label for="trainLine" class="col-lg-2 control-label">Frequency (min):</label>
                           <div class="col-lg-10">
-                            <textarea class="form-control" rows="3" id="textArea"></textarea>
-                            <span class="help-block">A longer block of help text that breaks onto a new line and may extend beyond one line.</span>
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <label class="col-lg-2 control-label">Radios</label>
-                          <div class="col-lg-10">
-                            <div class="radio">
-                              <label>
-                                <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="">
-                                Option one is this
-                              </label>
-                            </div>
-                            <div class="radio">
-                              <label>
-                                <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
-                                Option two can be something else
-                              </label>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <label for="select" class="col-lg-2 control-label">Selects</label>
-                          <div class="col-lg-10">
-                            <select class="form-control" id="select">
-                              <option>1</option>
-                              <option>2</option>
-                              <option>3</option>
-                              <option>4</option>
-                              <option>5</option>
-                            </select>
-                            <br>
-                            <select multiple="" class="form-control">
-                              <option>1</option>
-                              <option>2</option>
-                              <option>3</option>
-                              <option>4</option>
-                              <option>5</option>
-                            </select>
+                            <input type="text" class="form-control" id="frequency" placeholder="train line">
                           </div>
                         </div>
                         <div class="form-group">
                           <div class="col-lg-10 col-lg-offset-2">
-                            <button type="reset" class="btn btn-default">Cancel</button>
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="reset" id="cancel"  class="btn btn-default">Cancel</button>
+                            <button type="submit" id="submit" class="btn btn-primary">Submit</button>
                           </div>
                         </div>
                       </fieldset>
@@ -141,6 +88,11 @@
             </div>
 
     </main>
-    
+    <footer>
+      <p>Katy Cassidy | ihatetoast</p>
+    </footer>
+
+   
+    <script src="./scripts/main.js"></script>
   </body>
 </html>

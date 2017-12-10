@@ -15,12 +15,15 @@ $(document).ready(function(){
     //database variables:
     const database = firebase.database();
 
-    //app vars:
-    let frequency;
 
 
-    //moment variables:
+    //moment and mathymagic variables:
     const currentTime = moment();
+    let firstTrain;
+    let freq = 0;
+    let arrivalTime = 0;
+    let waitTime = 0;
+    
     
     // var monthsWorked = moment(cs.val().start).diff(moment(), "months") * -1;
   // when the page loads, i want to pull data from firebase and populate my train schedule 
@@ -28,17 +31,36 @@ $(document).ready(function(){
   //order by destination because that's what people would look up 
   //my story here is that this is seen in the main lobby of a train station
 
-  //the math happens when i bring things down from the farhbase
+  //the math magic happens when i bring things down from the farhbase
     database.ref().orderByChild("destination").on("child_added", function(childsnap){
-      console.log(childsnap.val());
+      const cs = childsnap.val();
+      console.log(`childsnap is ${childsnap.val()}`);
+      freq = cs.frequency;
+      firstTrain = cs.first;
+
+      //first time changed to a year prior to ensure input is always after the first train. it's a hack!
+      let firstTimeStatic = moment(firstTrain, "HH:mm").subtract(1, "years");
+      //difference between the first train time
+      let diffTime = moment().diff(moment(firstTimeStatic),"minutes");
+      let remainder = diffTime % freq;
+      waitTime = freq - remainder;
+      arrivalTime = moment().add(waitTime, "minutes");
       
+      console.log(`diffTime is ${diffTime}`);
+      console.log(`first time static is ${firstTimeStatic}`);
+      console.log(`freq is ${freq}`);
+      console.log(`first train is ${firstTrain}`);
+      console.log(`remainder is ${remainder}`);
+      console.log(`wait time is ${waitTime}`);
+      console.log(`arrival time is ${moment(arrivalTime).format("HH:mm")}`);
+
       $("tbody").append(`
         <tr>
         <td>${childsnap.val().train}</td>
         <td>${childsnap.val().destination}</td>
-        <td>${childsnap.val().frequency}</td>
-          <td>fake time</td>
-          <td>fake min left</td>
+        <td>${freq}</td>
+        <td>${moment(arrivalTime).format("HH:mm")}</td>
+        <td class="imminent">${waitTime}</td>
         </tr>
       `)
     })

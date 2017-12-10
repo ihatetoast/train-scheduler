@@ -1,3 +1,6 @@
-
+.buttonRow {
+  padding: 0 1em; }
+  .buttonRow button {
+    margin-right: 1em; }
 
 /*# sourceMappingURL=style.css.map */

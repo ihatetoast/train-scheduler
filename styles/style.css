@@ -3,4 +3,7 @@
   .buttonRow button {
     margin-right: 1em; }
 
+.titleCase {
+  text-transform: capitalize; }
+
 /*# sourceMappingURL=style.css.map */

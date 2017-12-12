@@ -1,6 +1,4 @@
 $(document).ready(function(){
-  console.log("if you see this, i dun did load.");
-
     // Initialize Firebase
     var config = {
       apiKey: "AIzaSyCQI7rNAFEy_rWJ6QTEMBx9OwwS31JSxRY",
@@ -12,6 +10,10 @@ $(document).ready(function(){
     };
     firebase.initializeApp(config);
 
+    
+    
+
+
     //database variables:
     const database = firebase.database();
 
@@ -19,13 +21,18 @@ $(document).ready(function(){
 
     //moment and mathymagic variables:
     const currentTime = moment();
-    let firstTrain;
+    let firstTrain = '';
     let freq = 0;
     let arrivalTime = 0;
     let waitTime = 0;
-    
-    
-    // var monthsWorked = moment(cs.val().start).diff(moment(), "months") * -1;
+    let train;
+    let first;
+    let destination;
+    let frequency;
+
+  //const of cities because it would not really let people write just anything. 
+  const texasCities = ["abilene", "allen", "amarillo", "arlington", "atascocita", "austin", "baytown", "beaumont","brownsville", "bryan", "carrollton", "cedar park","college station", "conroe", "corpus christi", "dallas", "denton", "desoto", "edinburg", "el paso", "euless", "fort worth", "galveston", "garland", "georgetown", "grand prairie", ,  "grapevine", "harlingen",  "houston", "irving", "katy", "killeen", "laredo", "league city", "longview", "lubbock", "mansfield", "mcallen", "mckinney", "mesquite", "midland", "mission",  "missouri city", "new braunfels", "odessa", "pasadena", "pflugerville", "plano",  "port arthur", "richardson", "round rock", "san angelo", "san antonio", "san marcos", "spring", "sugar land", "temple", "tyler", "victoria", "waco", "wichita falls"];
+  
   // when the page loads, i want to pull data from firebase and populate my train schedule 
   //and when there's change
   //order by destination because that's what people would look up 
@@ -39,33 +46,27 @@ $(document).ready(function(){
       firstTrain = cs.first;
 
       //first time changed to a year prior to ensure input is always after the first train. it's a hack!
-      let firstTimeStatic = moment(firstTrain, "HH:mm").subtract(1, "years");
+      let firstTimeStatic = moment(firstTrain, "HHmm").subtract(1, "years");
       //difference between the first train time
       let diffTime = moment().diff(moment(firstTimeStatic),"minutes");
       let remainder = diffTime % freq;
       waitTime = freq - remainder;
       arrivalTime = moment().add(waitTime, "minutes");
-      
-      console.log(`diffTime is ${diffTime}`);
-      console.log(`first time static is ${firstTimeStatic}`);
-      console.log(`freq is ${freq}`);
-      console.log(`first train is ${firstTrain}`);
-      console.log(`remainder is ${remainder}`);
-      console.log(`wait time is ${waitTime}`);
-      console.log(`arrival time is ${moment(arrivalTime).format("HH:mm")}`);
 
       $("tbody").append(`
         <tr>
-        <td>${childsnap.val().train}</td>
-        <td>${childsnap.val().destination}</td>
+        <td class="titleCase">${childsnap.val().train}</td>
+        <td class="titleCase">${childsnap.val().destination}</td>
         <td>${freq}</td>
         <td>${moment(arrivalTime).format("HH:mm")}</td>
-        <td class="imminent">${waitTime}</td>
+        <td class="waitTime">${waitTime} minutes</td>
         </tr>
-      `)
+      `);
+      console.log();
     })
   
-
+    //style minutes. if it's within 5 minutes, scare the shit out of those waiting on the platform checking their facie.
+    
   // i want to capture train information on when i submit a Form 
   // i want the form to clear on submit
   // i want to cancel if needed and clear the form
@@ -74,8 +75,6 @@ $(document).ready(function(){
   console.log(currentTime);
   console.log("CURRENT TIME: " + moment(currentTime).format("HH:mm"));
 
-  // regex for 24h: 
-  // console.log(/^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/.test('23:18'));
   
   //train runs every x minutes (freq) 
   //need to know when next train arrives from now. will need a first train time. 
@@ -85,20 +84,30 @@ $(document).ready(function(){
 /*I don't really know how to do the form validation library, so I am making it up. I'd like to do something where they get the warning off focus, but it's a battle of time I have to get this done and time I have to break everything with the validator and then to fix it.*/
   $("#submit").click((e)=>{
     e.preventDefault();
-    //only 24hr time in HH:rr format
-    if( !(/^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/.test($("#first").val().trim())) ){
-      alert('Please use the 24-hour format.');
-    } //no empty fields 
+    //input vals
+    train = $("#train").val().trim();
+    first = $("#first").val().trim();
+    destination = $("#destination").val().trim();
+    frequency = $("#frequency").val().trim();
+
+    //only military time, which no feckin departure board uses
+    if( !(/^([0-9]|0[0-9]|1[0-9]|2[0-3])[0-5][0-9]$/.test($("#first").val().trim())) ){
+      alert('Please use the military time format: hhmm.');
+    }
+     //no empty fields 
     else if ( ($("#train").val().trim()== '') || ($("#train").val().trim()== null) || ($("#destination").val().trim()== '') || ($("#destination").val().trim()== null) || ($("#frequency").val().trim()== '') || ($("#frequency").val().trim()== null) ){
       alert('No empty values, please.');
-    }    
+    }
+    //must be in the list 
+    else if(texasCities.indexOf(destination.toLowerCase())==-1){
+      alert('That city is not serviced by FART.');
+    }
     else{
-    
       const formData = {
-        train: $("#train").val().trim(),
-        first: $("#first").val().trim(),
-        destination: $("#destination").val().trim(),
-        frequency: $("#frequency").val().trim(),
+        train,
+        first,
+        destination,
+        frequency
       }
       console.log(`train line: ${formData.train}`);
       console.log(`first train departs at: ${formData.first}`);

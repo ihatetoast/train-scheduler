@@ -17,8 +17,6 @@ $(document).ready(function(){
     //database variables:
     const database = firebase.database();
 
-
-
     //moment and mathymagic variables:
     const currentTime = moment();
     let firstTrain = '';
@@ -41,10 +39,10 @@ $(document).ready(function(){
   //the math magic happens when i bring things down from the farhbase
     database.ref().orderByChild("destination").on("child_added", function(childsnap){
       const cs = childsnap.val();
-      console.log(`childsnap is ${childsnap.val()}`);
+      // console.log(`childsnap is ${childsnap.val()}`);
       freq = cs.frequency;
       firstTrain = cs.first;
-
+      
       //first time changed to a year prior to ensure input is always after the first train. it's a hack!
       let firstTimeStatic = moment(firstTrain, "HHmm").subtract(1, "years");
       //difference between the first train time
@@ -54,17 +52,23 @@ $(document).ready(function(){
       arrivalTime = moment().add(waitTime, "minutes");
 
       $("tbody").append(`
-        <tr>
-        <td class="titleCase">${childsnap.val().train}</td>
-        <td class="titleCase">${childsnap.val().destination}</td>
-        <td>${freq}</td>
-        <td>${moment(arrivalTime).format("HH:mm")}</td>
-        <td class="waitTime">${waitTime} minutes</td>
+        <tr class="trainRow">
+          <td class="titleCase">${childsnap.val().train}</td>
+          <td class="titleCase">${childsnap.val().destination}</td>
+          <td>${freq}</td>
+          <td>${moment(arrivalTime).format("HH:mm")}</td>
+          <td class="waitTime">${waitTime} minutes</td>
         </tr>
       `);
       console.log();
-    })
-  
+    });
+  $("tbody").on("click",".trainRow", function(){
+    console.log(this);
+  });
+  database.ref().on("child_removed", function(snapshot) {
+    var deletedPost = snapshot.val();
+    console.log("The blog post titled '" + deletedPost.title + "' has been deleted");
+  });
     //style minutes. if it's within 5 minutes, scare the shit out of those waiting on the platform checking their facie.
     
   // i want to capture train information on when i submit a Form 
@@ -125,6 +129,8 @@ $(document).ready(function(){
     $("#destination").val('');
     $("#frequency").val('');
   });
+  // database.ref.child(key).remove();
+  
   
 
   // i want to use momentjs to figure out when the next train is due to depart. 
